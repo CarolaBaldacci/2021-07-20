@@ -5,9 +5,11 @@
 package it.polito.tdp.yelp;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.yelp.model.Model;
+import it.polito.tdp.yelp.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,13 +40,13 @@ public class FXMLController {
     private TextField txtX2; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbAnno"
-    private ComboBox<?> cmbAnno; // Value injected by FXMLLoader
+    private ComboBox<Integer> cmbAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbUtente"
-    private ComboBox<?> cmbUtente; // Value injected by FXMLLoader
+    private ComboBox<User> cmbUtente; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtX1"
     private TextField txtX1; // Value injected by FXMLLoader
@@ -54,12 +56,38 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	txtResult.clear();
+    	Integer a= cmbAnno.getValue();
+    	if(a==null) {
+    		txtResult.appendText("selezionare un anno");
+    		return ;
+    	}
+    	try {
+    		int n= Integer.parseInt(this.txtN.getText());
+    		String result=this.model.CreaGrafo(n, a);
+    		txtResult.appendText(result+"\n");
+    		cmbUtente.getItems().clear();
+    		cmbUtente.getItems().addAll(this.model.getUsers());
+    	}catch(NumberFormatException e) {
+    		txtResult.appendText(" fornire n! ");
+    		return;
+    	}
     }
 
     @FXML
     void doUtenteSimile(ActionEvent event) {
-
+    	
+    	User u=cmbUtente.getValue();
+    	if(u==null) {
+    		txtResult.appendText("Selezionare un utente");
+    		return;
+    	}
+    	List <User> vicini=model.getUtenteSimile(u);
+    	txtResult.appendText("Utenti più vicini a "+u+"\n\n");
+    	for(User u2:vicini) {
+    		txtResult.appendText(u2.toString()+"\n");
+    	}
+    	
     }
     
     @FXML
@@ -84,5 +112,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	for(int i=2005; i<=2013;i++)
+    		this.cmbAnno.getItems().add(i);
     }
 }
