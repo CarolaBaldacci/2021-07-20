@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.yelp.model.Giornalista;
 import it.polito.tdp.yelp.model.Model;
 import it.polito.tdp.yelp.model.User;
 import javafx.event.ActionEvent;
@@ -93,6 +94,26 @@ public class FXMLController {
     @FXML
     void doSimula(ActionEvent event) {
 
+    	try {
+    		int x1=Integer.parseInt(txtX1.getText());
+    		int x2=Integer.parseInt(txtX2.getText());
+    		if(x2>model.getUsers().size()) {
+    			txtResult.appendText("x2 deve essere minore o uguale al numero di utenti\n");
+    			return;
+    		}
+    		if(x1>x2) {
+    			txtResult.appendText("x2 deve essere maggiore o uguale a x1\n");
+    			return;
+    		}
+    		
+    		this.model.simula(x1,x2);
+    		txtResult.appendText("Numero di giorni: "+ this.model.getNumeroGiorni()+"\n");
+    		for(Giornalista g: this.model.getGiornalisti()) {
+    			txtResult.appendText("Giornalista "+ g.getId()+ ": "+ g.getNumeroIntervistati()+ " intervistati\n");
+    		}
+    	}catch(NumberFormatException ex) {
+    		txtResult.appendText("Errore: x1 ed x2 devono essere valori interi\n");
+    	}
     }
     
 

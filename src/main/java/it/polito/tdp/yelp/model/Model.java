@@ -2,7 +2,6 @@ package it.polito.tdp.yelp.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
@@ -12,9 +11,13 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import it.polito.tdp.yelp.db.YelpDao;
 
 public class Model {
+	//PUNTO 1
 	private Graph <User, DefaultWeightedEdge> grafo ;
 	private List<User> utenti;
 
+	//PUNTO 2: risultati simulazione
+	private int numeroGiorni ;
+	private List<Giornalista> giornalisti ;
 	
 //CREAZIONE GRAFO
 	public String CreaGrafo(int n, int anno) {
@@ -57,6 +60,24 @@ public class Model {
 				
 		}
 		return result;
+	}
+
+//SIMULAZIONE
+	public void simula(int intervistatori, int utenti) {
+		Simulatore sim = new Simulatore(this.grafo);
+		sim.init(intervistatori, utenti);
+		sim.run();
+		this.giornalisti = sim.getGiornalisti();
+		this.numeroGiorni = sim.getNumeroGiorni();
+		
+	}
+
+	public int getNumeroGiorni() {
+		return this.numeroGiorni;
+	}
+
+	public List<Giornalista> getGiornalisti() {
+		return this.giornalisti;
 	}
 	
 }
